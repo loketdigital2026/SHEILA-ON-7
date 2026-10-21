@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light">
+  <meta name="format-detection" content="telephone=no">
+
+  <title>Pembelian Tiket Gagal</title>
+  <meta
+    name="description"
+    content="Pembelian tiket gagal. Periksa kembali QR pembayaran Anda atau hubungi Customer Service melalui WhatsApp."
+  >
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --text: #17191f;
+      --text-soft: #68707c;
+      --line: #e9edf2;
+
+      --danger: #e53935;
+      --danger-dark: #c62828;
+      --danger-soft: #fff1f1;
+
+      --wa: #25d366;
+      --wa-dark: #1ebe5d;
+
+      --shadow:
+        0 24px 70px rgba(21, 27, 38, .10),
+        0 5px 18px rgba(21, 27, 38, .05);
+
+      --radius: 26px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      background:
+        radial-gradient(
+          circle at 50% -15%,
+          rgba(229, 57, 53, .08),
+          transparent 36%
+        ),
+        var(--bg);
+
+      color: var(--text);
+
+      font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      justify-content: center;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100svh;
+
+      display: flex;
+      flex-direction: column;
+
+      max-width: 480px;
+      margin: 0 auto;
+
+      background: rgba(255, 255, 255, .94);
+    }
+
+    .header {
+      min-height: 64px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding:
+        max(14px, env(safe-area-inset-top))
+        20px
+        14px;
+
+      border-bottom: 1px solid rgba(233, 237, 242, .8);
+
+      background: rgba(255, 255, 255, .88);
+
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-title {
+      font-size: 15px;
+      line-height: 1.2;
+      font-weight: 750;
+      letter-spacing: -.015em;
+      color: #2b3038;
+    }
+
+    main {
+      flex: 1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding:
+        38px
+        22px
+        max(38px, env(safe-area-inset-bottom));
+    }
+
+    .status {
+      width: 100%;
+      text-align: center;
+    }
+
+    .icon-area {
+      position: relative;
+      width: 112px;
+      height: 112px;
+      margin: 0 auto 28px;
+    }
+
+    .icon-glow {
+      position: absolute;
+      inset: 0;
+
+      border-radius: 50%;
+      background: var(--danger-soft);
+
+      animation: pulse 2.6s ease-in-out infinite;
+    }
+
+    .icon-ring {
+      position: absolute;
+      inset: 12px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 50%;
+      background: #fff;
+
+      border: 1px solid rgba(229, 57, 53, .15);
+
+      box-shadow:
+        0 14px 38px rgba(229, 57, 53, .10),
+        inset 0 0 0 7px rgba(229, 57, 53, .035);
+    }
+
+    .failed-icon {
+      width: 52px;
+      height: 52px;
+
+      color: var(--danger);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      margin-bottom: 12px;
+      padding: 6px 11px;
+
+      background: var(--danger-soft);
+      color: var(--danger-dark);
+
+      border-radius: 999px;
+
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow-dot {
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+      background: var(--danger);
+    }
+
+    h1 {
+      max-width: 360px;
+      margin: 0 auto;
+
+      font-size: clamp(28px, 8vw, 36px);
+      line-height: 1.13;
+
+      font-weight: 800;
+      letter-spacing: -.045em;
+
+      color: #181b21;
+    }
+
+    .description {
+      max-width: 370px;
+
+      margin: 16px auto 0;
+
+      font-size: 14px;
+      line-height: 1.75;
+
+      color: var(--text-soft);
+    }
+
+    .description strong {
+      color: #3b414a;
+      font-weight: 700;
+    }
+
+    .notice {
+      margin: 28px auto 0;
+      width: 100%;
+
+      display: flex;
+      gap: 12px;
+
+      text-align: left;
+
+      padding: 15px 16px;
+
+      border: 1px solid var(--line);
+      border-radius: 17px;
+
+      background: var(--surface-soft);
+    }
+
+    .notice-icon {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 12px;
+
+      background: #fff;
+      color: var(--danger);
+
+      border: 1px solid #eceff3;
+    }
+
+    .notice-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .notice-content {
+      min-width: 0;
+    }
+
+    .notice-title {
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 750;
+      color: #30353d;
+    }
+
+    .notice-text {
+      margin-top: 3px;
+
+      font-size: 12px;
+      line-height: 1.55;
+
+      color: #7a828e;
+    }
+
+    .actions {
+      margin-top: 22px;
+    }
+
+    .whatsapp-btn {
+      position: relative;
+      overflow: hidden;
+
+      width: 100%;
+      min-height: 54px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      border-radius: 16px;
+
+      background: var(--wa);
+      color: #fff;
+
+      font-size: 14px;
+      line-height: 1;
+      font-weight: 800;
+
+      box-shadow:
+        0 12px 28px rgba(37, 211, 102, .22);
+
+      transition:
+        transform .15s ease,
+        background .15s ease,
+        box-shadow .15s ease;
+    }
+
+    .whatsapp-btn:hover {
+      background: var(--wa-dark);
+      box-shadow:
+        0 15px 32px rgba(37, 211, 102, .28);
+    }
+
+    .whatsapp-btn:active {
+      transform: scale(.985);
+    }
+
+    .whatsapp-btn:focus-visible {
+      outline: 3px solid rgba(37, 211, 102, .25);
+      outline-offset: 3px;
+    }
+
+    .whatsapp-btn svg {
+      width: 22px;
+      height: 22px;
+      flex: 0 0 auto;
+    }
+
+    .cs-info {
+      margin-top: 12px;
+
+      font-size: 11px;
+      line-height: 1.55;
+      color: #9aa1aa;
+    }
+
+    footer {
+      padding:
+        18px
+        20px
+        calc(22px + env(safe-area-inset-bottom));
+
+      text-align: center;
+
+      font-size: 10.5px;
+      line-height: 1.6;
+
+      color: #a0a7b1;
+
+      border-top: 1px solid rgba(233, 237, 242, .72);
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.07);
+        opacity: .62;
+      }
+    }
+
+    @media (min-width: 700px) {
+      body {
+        padding: 30px 0;
+        background: #f2f4f7;
+      }
+
+      .page {
+        min-height: calc(100vh - 60px);
+        min-height: calc(100svh - 60px);
+
+        border-radius: var(--radius);
+        overflow: hidden;
+
+        box-shadow: var(--shadow);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <header class="header">
+      <div class="header-title">Status Pembayaran</div>
+    </header>
+
+    <main>
+      <section
+        class="status"
+        aria-labelledby="failedTitle"
+        aria-describedby="failedDescription"
+      >
+
+        <div class="icon-area" aria-hidden="true">
+
+          <div class="icon-glow"></div>
+
+          <div class="icon-ring">
+
+            <svg
+              class="failed-icon"
+              viewBox="0 0 64 64"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="32"
+                cy="32"
+                r="23"
+                stroke="currentColor"
+                stroke-width="4"
+              />
+
+              <path
+                d="M24 24L40 40"
+                stroke="currentColor"
+                stroke-width="4.5"
+                stroke-linecap="round"
+              />
+
+              <path
+                d="M40 24L24 40"
+                stroke="currentColor"
+                stroke-width="4.5"
+                stroke-linecap="round"
+              />
+            </svg>
+
+          </div>
+        </div>
+
+        <div class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          Pembayaran Tidak Berhasil
+        </div>
+
+        <h1 id="failedTitle">
+          Pembelian Tiket Gagal
+        </h1>
+
+        <p
+          class="description"
+          id="failedDescription"
+        >
+          Sistem belum dapat memverifikasi pembayaran Anda.
+          <strong>
+            Periksa kembali QR pembayaran yang digunakan
+          </strong>
+          dan pastikan proses pembayaran telah dilakukan dengan benar.
+          Jika Anda membutuhkan bantuan, silakan hubungi Customer Service.
+        </p>
+
+        <div class="notice">
+
+          <div class="notice-icon" aria-hidden="true">
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 9V13"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+
+              <circle
+                cx="12"
+                cy="17"
+                r="1"
+                fill="currentColor"
+              />
+
+              <path
+                d="M10.25 4.8L2.9 17.5C2.13 18.83 3.09 20.5 4.63 20.5H19.37C20.91 20.5 21.87 18.83 21.1 17.5L13.75 4.8C12.98 3.47 11.02 3.47 10.25 4.8Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </div>
+
+          <div class="notice-content">
+
+            <div class="notice-title">
+              Periksa transaksi sebelum mencoba kembali
+            </div>
+
+            <div class="notice-text">
+              Hindari melakukan pembayaran berulang sebelum memastikan
+              status transaksi sebelumnya.
+            </div>
+
+          </div>
+        </div>
+
+        <div class="actions">
+
+          <a
+            class="whatsapp-btn"
+            href="https://wa.me/6282372511525?text=Halo%20CS%2C%20saya%20mengalami%20kendala%20pada%20pembelian%20tiket.%20Pembayaran%20saya%20dinyatakan%20gagal.%20Mohon%20bantuannya."
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Hubungi Customer Service melalui WhatsApp"
+          >
+
+            <svg
+              viewBox="0 0 32 32"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M16.04 3C9.04 3 3.35 8.61 3.35 15.52c0 2.42.7 4.79 2.03 6.82L3.22 29l6.9-2.14a12.86 12.86 0 0 0 5.91 1.44h.01c6.99 0 12.68-5.61 12.68-12.52C28.72 8.87 23.03 3 16.04 3Zm7.47 17.76c-.32.88-1.88 1.68-2.58 1.78-.66.1-1.49.14-2.4-.15-.55-.17-1.26-.41-2.17-.8-3.81-1.63-6.29-5.42-6.48-5.67-.18-.24-1.54-2.03-1.54-3.88s.97-2.76 1.31-3.14c.34-.38.75-.48 1-.48.25 0 .5 0 .72.01.23.01.54-.08.85.64.32.74 1.08 2.56 1.17 2.75.1.19.16.41.03.65-.12.24-.19.39-.37.6-.19.22-.39.48-.56.64-.19.19-.38.4-.16.78.22.38.98 1.6 2.11 2.59 1.45 1.27 2.67 1.66 3.05 1.85.38.19.6.16.82-.09.22-.25.94-1.08 1.19-1.45.25-.37.5-.31.84-.19.35.13 2.2 1.02 2.58 1.21.38.19.63.28.72.44.09.16.09.91-.23 1.79Z"/>
+            </svg>
+
+            Hubungi CS WhatsApp
+
+          </a>
+
+          <p class="cs-info">
+            Anda akan diarahkan ke WhatsApp Customer Service
+            <strong>+62 823 7251-1525</strong>.
+          </p>
+
+        </div>
+
+      </section>
+    </main>
+
+    <footer>
+      Pastikan informasi transaksi dan bukti pembayaran tersedia
+      saat menghubungi Customer Service.
+    </footer>
+
+  </div>
+
+</body>
+</html>
