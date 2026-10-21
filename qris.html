@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Pembayaran QRIS untuk tiket Sheila On 7 x BSI Internasional Expo 2026 — scan QR dengan e-wallet atau m-banking favoritmu.">
+  <meta name="theme-color" content="#f43f5e">
+  <meta name="robots" content="noindex, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Goers">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:title" content="Pembayaran QRIS - Sheila On 7 x BSI Internasional Expo 2026 - Goers">
+  <meta property="og:description" content="Selesaikan pembayaran QRIS untuk mengamankan tiket Concert Pass - Sheila On 7.">
+  <meta property="og:image" content="banner.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pembayaran QRIS - Sheila On 7 x BSI Internasional Expo 2026 - Goers">
+  <meta name="twitter:description" content="Selesaikan pembayaran QRIS untuk mengamankan tiket Concert Pass - Sheila On 7.">
+  <meta name="twitter:image" content="banner.webp">
+  <link rel="icon" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="preconnect" href="https://cdn.tailwindcss.com">
+  <link rel="preconnect" href="https://unpkg.com">
+  <title>Pembayaran QRIS - Sheila On 7 x BSI Internasional Expo 2026 - Goers</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js" defer></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Beranda" },
+      { "@type": "ListItem", "position": 2, "name": "Event" },
+      { "@type": "ListItem", "position": 3, "name": "Jakarta" },
+      { "@type": "ListItem", "position": 4, "name": "Sheila On 7 x BSI Internasional Expo 2026", "item": "event.html" },
+      { "@type": "ListItem", "position": 5, "name": "Pilih Tiket", "item": "tiket.html" },
+      { "@type": "ListItem", "position": 6, "name": "Data Pembeli", "item": "form.html" },
+      { "@type": "ListItem", "position": 7, "name": "Pembayaran", "item": "qris.html" }
+    ]
+  }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    html { scroll-behavior: smooth; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
+    ::selection { background: #fecdd3; color: #881337; }
+    :focus-visible { outline: 2px solid #fb7185; outline-offset: 2px; border-radius: 6px; }
+    .press { transition: transform .12s ease, background-color .2s ease, box-shadow .2s ease, color .2s ease; }
+    .press:active { transform: scale(.95); }
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .55s cubic-bezier(.22,.61,.36,1), transform .55s cubic-bezier(.22,.61,.36,1); }
+    .reveal.in { opacity: 1; transform: none; }
+    .shimmer { position: relative; overflow: hidden; }
+    .shimmer::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent); animation: shimmer 1.4s infinite; }
+    .shimmer.loaded::after { display: none; }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 999px; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #toastWrap { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 95; display: flex; flex-direction: column; align-items: center; gap: 8px; width: max-content; max-width: min(92vw, 420px); pointer-events: none; }
+    .toast { background: rgba(15,23,42,.92); color: #fff; font-size: 12px; font-weight: 500; padding: 10px 16px; border-radius: 999px; box-shadow: 0 10px 25px -5px rgba(15,23,42,.4); opacity: 0; transform: translateY(10px) scale(.97); transition: opacity .3s ease, transform .3s ease; text-align: center; backdrop-filter: blur(6px); }
+    .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+    .field-input { width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 0.75rem; padding: 0.65rem 0.9rem; font-size: 12px; color: #1e293b; transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
+    .field-input::placeholder { color: #94a3b8; }
+    .field-input:focus { outline: none; background: #fff; border-color: #fb7185; box-shadow: 0 0 0 3px rgba(251,113,133,.18); }
+    #navOverlay { position: fixed; inset: 0; background: rgba(236,253,245,.96); backdrop-filter: blur(8px); z-index: 98; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+    #navOverlay.open { opacity: 1; pointer-events: auto; }
+    #navOverlay .ring { width: 44px; height: 44px; border: 3.5px solid #a7f3d0; border-top-color: #10b981; border-radius: 999px; animation: spin .8s linear infinite; }
+    #payBtn .buy-spin { display: none; align-items: center; }
+    #payBtn.is-loading { pointer-events: none; }
+    #payBtn.is-loading .buy-label { display: none; }
+    #payBtn.is-loading .buy-spin { display: flex; }
+    #payBtn.btn-disabled { background: #e2e8f0; color: #94a3b8; box-shadow: none; }
+    #bottomBar { padding-bottom: calc(0.625rem + env(safe-area-inset-bottom, 0px)); }
+    .foot-link { display: block; width: 100%; text-align: left; font-size: 11px; color: #64748b; }
+    .qr-frame { image-rendering: pixelated; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+      .shimmer::after { animation: none; display: none; }
+      .toast, #navOverlay { transition: none; }
+      #navOverlay .ring { animation-duration: 1.6s; }
+    }
+  </style>
+  <noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body class="pb-28">
+
+  <div id="toastWrap" aria-live="polite"></div>
+
+  <header class="bg-white/95 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center press" aria-label="Beranda Goers">
+        <img src="logo.png" alt="Goers Logo" class="h-6 object-contain" width="72" height="24" decoding="async">
+      </a>
+      <div class="flex items-center space-x-3 text-sm">
+        <button id="langBtn" type="button" class="flex items-center space-x-1 press" aria-label="Pilih bahasa">
+          <span class="text-xs">🇮🇩</span>
+          <i data-lucide="chevron-down" class="w-3 h-3 text-gray-500"></i>
+        </button>
+        <button id="exploreBtn" type="button" class="flex items-center space-x-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full text-xs font-medium press">
+          <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+          <span>Jelajahi</span>
+          <span class="bg-rose-500 text-white text-[10px] rounded-full px-1.5 py-0.5 font-bold">NEW</span>
+        </button>
+        <button id="userBtn" type="button" class="p-1 press" aria-label="Akun saya">
+          <i data-lucide="user" class="w-5 h-5 text-gray-600"></i>
+        </button>
+      </div>
+    </div>
+    <div class="max-w-md mx-auto px-4 pb-3">
+      <div class="relative">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-gray-400 pointer-events-none"></i>
+        <input id="searchInput" type="search" placeholder="Cari keseruan" enterkeyhint="search" aria-label="Cari keseruan"
+          class="w-full bg-gray-100 text-xs rounded-full pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:bg-white transition">
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto px-4 pt-4 space-y-4">
+
+    <nav aria-label="Breadcrumb" class="text-xs text-gray-500 leading-relaxed reveal">
+      <div class="flex items-center flex-wrap gap-x-1 gap-y-1">
+        <button type="button" class="crumb-demo press hover:text-rose-500 font-medium">Beranda</button>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-gray-300"></i>
+        <button type="button" class="crumb-demo press hover:text-rose-500 font-medium">Event</button>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-gray-300"></i>
+        <button type="button" class="crumb-demo press hover:text-rose-500 font-medium">Jakarta</button>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-gray-300"></i>
+        <a href="event.html" class="press hover:text-rose-500 font-medium">Sheila On 7 x BSI Internasional Expo 2026</a>
+        <i data-lucide="chevron-right" class="w-3 h-3 text-gray-300"></i>
+        <span class="font-bold text-[#12275c]">Pembayaran</span>
+      </div>
+    </nav>
+
+    <section class="reveal">
+      <p class="text-sm text-gray-500">Informasi Pembayaran</p>
+      <h1 class="text-2xl font-extrabold text-gray-900 leading-tight mt-0.5">Pembayaran QRIS</h1>
+      <div class="flex items-center gap-1.5 mt-3" aria-hidden="true">
+        <span class="flex items-center gap-1 text-[10px] font-semibold text-emerald-600">
+          <span class="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center"><i data-lucide="check" class="w-2.5 h-2.5"></i></span> Tiket
+        </span>
+        <span class="flex-1 h-px bg-emerald-300"></span>
+        <span class="flex items-center gap-1 text-[10px] font-semibold text-emerald-600">
+          <span class="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center"><i data-lucide="check" class="w-2.5 h-2.5"></i></span> Data Diri
+        </span>
+        <span class="flex-1 h-px bg-gray-200"></span>
+        <span class="flex items-center gap-1 text-[10px] font-bold text-rose-600">
+          <span class="w-4 h-4 rounded-full bg-rose-500 text-white flex items-center justify-center text-[9px]">3</span> Pembayaran
+        </span>
+        <span class="flex-1 h-px bg-gray-200"></span>
+        <span class="flex items-center gap-1 text-[10px] font-semibold text-gray-400">
+          <span class="w-4 h-4 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-[9px]">4</span> E-Ticket
+        </span>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-3 reveal" style="transition-delay:40ms">
+      <div class="w-12 h-12 rounded-xl overflow-hidden bg-amber-200 shrink-0 shimmer">
+        <img src="banner.webp" alt="Sheila On 7 x BSI Internasional Expo 2026" class="w-full h-full object-cover" decoding="async">
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-xs font-bold text-gray-800 truncate">Concert Pass - Sheila On 7</p>
+        <p class="text-[10px] text-gray-500">Minggu, 25 Okt 2026 · Jakarta International Convention Centre (JICC)</p>
+      </div>
+      <div class="text-right shrink-0">
+        <p id="sumQty" class="text-[10px] font-semibold text-gray-500">1 tiket</p>
+        <p id="sumTotal" class="text-sm font-extrabold text-gray-900">IDR 500.000</p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 reveal" style="transition-delay:80ms">
+      <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+        <span class="text-lg font-black tracking-tight bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 bg-clip-text text-transparent">QRIS</span>
+        <span class="text-[9px] font-semibold text-gray-400 text-right leading-tight">Satu QRIS untuk semua<br>e-wallet &amp; m-banking</span>
+      </div>
+
+      <div class="mt-4 flex flex-col items-center gap-3">
+        <div class="relative">
+          <div id="qrBox" class="qr-frame w-56 h-56 bg-white rounded-xl border border-gray-200 p-2 shadow-inner grid place-items-center"><img src="qris.png" alt="Gambar QRIS" class="w-full h-full object-contain" width="224" height="224" decoding="async" onerror="this.style.display='none';this.parentElement.setAttribute('aria-label','File qris.png tidak ditemukan');this.parentElement.insertAdjacentHTML('beforeend','<p class=\'text-center text-xs text-rose-600 p-3\'>File qris.png tidak ditemukan</p>')"></div>
+          <span class="absolute inset-0 m-auto w-9 h-9 rounded-lg bg-rose-500 text-white grid place-items-center font-black text-sm shadow-md">G</span>
+        </div>
+        <p id="payTotal" class="text-lg font-extrabold text-gray-900" aria-live="polite">IDR 500.000</p>
+        <p class="text-[10px] text-gray-400 -mt-2 flex items-center gap-1.5">Ref: <span id="refCode" class="font-mono font-semibold text-gray-500">GRS-…</span>
+          <button type="button" id="copyRef" class="press inline-flex items-center gap-0.5 text-[10px] font-bold text-rose-500 hover:text-rose-600" aria-label="Salin kode referensi"><i data-lucide="copy" class="w-3 h-3"></i>Salin</button>
+        </p>
+        <div id="timerPill" class="flex items-center gap-1.5 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full">
+          <i data-lucide="timer" class="w-3.5 h-3.5"></i><span>Bayar dalam</span><span id="countdown" class="font-mono">15:00</span>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-gray-100 text-center space-y-0.5">
+        <p class="text-xs font-bold text-gray-800">BSI INTERNASIONAL EXPO 2026</p>
+        <p class="text-[10px] font-mono text-gray-400">NMID: ID2026GRS0725</p>
+        <p class="text-[10px] text-gray-500">GoPay · OVO · DANA · ShopeePay · LinkAja · BSI Mobile</p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-3 reveal" style="transition-delay:120ms">
+      <h2 class="text-xs font-bold text-gray-800 pb-1 border-b border-gray-100">Cara Pembayaran</h2>
+      <div class="flex items-start gap-3">
+        <span class="w-5 h-5 rounded-md bg-rose-100 text-rose-600 text-[10px] font-black grid place-items-center shrink-0">1</span>
+        <p class="text-[11px] text-gray-600 leading-relaxed">Buka aplikasi e-wallet atau m-banking apa pun yang mendukung QRIS (GoPay, OVO, DANA, ShopeePay, BSI Mobile, dll.).</p>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="w-5 h-5 rounded-md bg-rose-100 text-rose-600 text-[10px] font-black grid place-items-center shrink-0">2</span>
+        <p class="text-[11px] text-gray-600 leading-relaxed">Pilih menu <b>Bayar / Scan QRIS</b>, lalu arahkan kamera ke kode QR di atas.</p>
+      </div>
+      <div class="flex items-start gap-3">
+        <span class="w-5 h-5 rounded-md bg-rose-100 text-rose-600 text-[10px] font-black grid place-items-center shrink-0">3</span>
+        <p class="text-[11px] text-gray-600 leading-relaxed">Periksa nominal <b id="stepTotal">IDR 500.000</b>, selesaikan pembayaran, lalu tekan tombol <b>Saya Sudah Bayar</b>.</p>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 space-y-4 reveal" style="transition-delay:150ms">
+      <div>
+        <h2 class="text-sm font-bold text-gray-900">Bukti Pembayaran</h2>
+        <p class="text-[11px] text-gray-500 mt-1">Pilih tangkapan layar atau file bukti pembayaran (JPG, PNG, WEBP, atau PDF; maks. 5 MB).</p>
+      </div>
+      <label for="paymentProof" class="block border-2 border-dashed border-rose-200 bg-rose-50/60 rounded-xl p-4 text-center cursor-pointer hover:bg-rose-50 transition">
+        <span class="mx-auto mb-2 w-10 h-10 rounded-full bg-white text-rose-500 grid place-items-center"><i data-lucide="upload-cloud" class="w-5 h-5"></i></span>
+        <span class="block text-xs font-bold text-gray-800">Pilih file bukti pembayaran</span>
+        <span class="block text-[10px] text-gray-500 mt-1">Ketuk untuk memilih file dari perangkat</span>
+        <input id="paymentProof" name="paymentProof" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" class="sr-only" aria-describedby="proofFileName proofHelp">
+      </label>
+      <p id="proofFileName" class="text-[11px] text-gray-500 break-all" aria-live="polite">Belum ada file yang dipilih.</p>
+      <p id="proofHelp" class="text-[10px] text-rose-600" role="status"></p>
+      <div class="space-y-3 border-t border-gray-100 pt-3">
+        <label class="flex items-start gap-2.5 text-[11px] leading-relaxed text-gray-700">
+          <input id="checkPayment" type="checkbox" class="mt-0.5 h-4 w-4 accent-rose-500 shrink-0">
+          <span>Saya menyatakan telah menyelesaikan pembayaran sesuai nominal yang tertera.</span>
+        </label>
+        <label class="flex items-start gap-2.5 text-[11px] leading-relaxed text-gray-700">
+          <input id="checkProof" type="checkbox" class="mt-0.5 h-4 w-4 accent-rose-500 shrink-0">
+          <span>Saya memastikan bukti yang dipilih sesuai dengan transaksi dan dapat dibaca.</span>
+        </label>
+      </div>
+      <p class="text-[10px] text-gray-400 leading-relaxed">Kedua kotak centang dan file bukti wajib dipilih. Halaman statis ini belum mengirim file ke server; integrasi backend diperlukan untuk unggahan dan verifikasi nyata.</p>
+    </section>
+
+    <section class="bg-sky-50 border border-sky-200 text-sky-800 p-3 rounded-xl text-[11px] leading-relaxed flex items-start gap-2 reveal" style="transition-delay:160ms">
+      <i data-lucide="shield-check" class="w-4 h-4 shrink-0 mt-0.5"></i>
+      <span>Halaman ini adalah demo: kode QR bersifat simulasi dan tidak terhubung ke sistem pembayaran. Jangan pernah membagikan PIN, OTP, atau data kartu kepada siapa pun.</span>
+    </section>
+
+    <footer class="pt-4 pb-6 space-y-6 text-xs text-slate-700 reveal" style="transition-delay:200ms">
+      <nav class="pt-3 border-t border-gray-200 space-y-5" aria-label="Tautan footer">
+        <div>
+          <h3 class="text-[11px] font-extrabold tracking-wide text-[#12275c] mb-2">MENGGUNAKAN GOERS</h3>
+          <ul class="space-y-1.5">
+            <li><button type="button" class="foot-link press hover:text-rose-500">Penawaran Terbaik</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Lokasi Terbaik</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Promo</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Pusat Bantuan</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Kebijakan Privasi</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Syarat dan Ketentuan</button></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-[11px] font-extrabold tracking-wide text-[#12275c] mb-2">INFORMASI</h3>
+          <ul class="space-y-1.5">
+            <li><button type="button" class="foot-link press hover:text-rose-500">Menayangkan Event di Goers</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Solusi Pemilik Venue</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Unduh Brosur</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Goers Experience Manager</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Point of Sales</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Ticket Scanner</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Harga</button></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-[11px] font-extrabold tracking-wide text-[#12275c] mb-2">BISNIS</h3>
+          <ul class="space-y-1.5">
+            <li><button type="button" class="foot-link press hover:text-rose-500">Solusi New Normal</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Managemen Online Event</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Venue &amp; Event Olahraga</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Taman Bertema</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Tur &amp; Wisata</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Pameran</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Konser &amp; Musik</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Seminar</button></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-[11px] font-extrabold tracking-wide text-[#12275c] mb-2">BERTEMU GOERS</h3>
+          <ul class="space-y-1.5">
+            <li><button type="button" class="foot-link press hover:text-rose-500">Tentang Kami</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Blog</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Karir</button></li>
+            <li><button type="button" class="foot-link press hover:text-rose-500">Press Kit</button></li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="space-y-1.5">
+        <p class="text-[11px] font-extrabold text-[#12275c]">Layanan Pelanggan:</p>
+        <p class="text-[11px] text-slate-500 flex items-center gap-1.5"><i data-lucide="instagram" class="w-3.5 h-3.5 shrink-0"></i>Instagram: @goersapp</p>
+        <p class="text-[11px] text-slate-500 flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5 shrink-0"></i>Email: cs@goersapp.com</p>
+      </div>
+
+      <div class="space-y-1.5">
+        <p class="text-[11px] font-extrabold text-[#12275c]">Kantor Goers:</p>
+        <p class="text-[11px] text-slate-500 flex items-start gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 shrink-0 mt-0.5"></i><span>Setiabudi Atrium Lt. 4 Unit 406 Kuningan, Setiabudi, Kota Jakarta Selatan 12920</span></p>
+      </div>
+
+      <div class="space-y-1.5">
+        <p class="text-[11px] font-extrabold text-[#12275c]">Jam Kerja:</p>
+        <p class="text-[11px] text-slate-500 flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5 shrink-0"></i>Hari Kerja @ 09.00 - 20.00</p>
+      </div>
+
+      <div class="pt-4 border-t border-gray-200 text-center space-y-3">
+        <p class="text-[11px] font-semibold text-slate-600">Privacy &amp; Security</p>
+        <div class="flex items-center justify-center gap-3">
+          <span class="inline-flex flex-col items-center justify-center px-3 py-1.5 rounded-md bg-white border border-gray-200 leading-tight">
+            <span class="text-sm font-black text-sky-700 italic tracking-tight">KAN</span>
+            <span class="text-[6.5px] font-semibold text-slate-500">Komite Akreditasi Nasional</span>
+            <span class="text-[6.5px] font-bold text-slate-700">LSIM-978-IDN</span>
+          </span>
+          <span class="inline-flex flex-col items-center justify-center px-3 py-1.5 rounded-md bg-sky-50 border border-sky-200 leading-tight">
+            <span class="text-[7px] font-bold text-sky-700 tracking-wide">ISO CERTIFICATION</span>
+            <span class="text-[10px] font-black text-sky-800">ISO 27001:2022</span>
+            <span class="text-[6.5px] font-bold text-emerald-600">✓ INFORMATION SECURITY</span>
+          </span>
+        </div>
+        <div class="flex items-center justify-center space-x-6 pt-1">
+          <button type="button" class="social-btn press hover:text-rose-500" data-name="Instagram" aria-label="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></button>
+          <button type="button" class="social-btn press hover:text-rose-500" data-name="Facebook" aria-label="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></button>
+          <button type="button" class="social-btn press hover:text-rose-500" data-name="X" aria-label="X"><i data-lucide="twitter" class="w-5 h-5"></i></button>
+        </div>
+      </div>
+
+      <form id="subsForm" novalidate class="pt-2 text-center space-y-2.5">
+        <p class="text-[11px] text-slate-500">Dapatkan kabar terakhir dari kami</p>
+        <p class="text-xs font-bold text-[#12275c]">Berlangganan newsletter</p>
+        <div class="flex items-stretch gap-2">
+          <input id="subsEmail" type="email" inputmode="email" class="field-input flex-1" placeholder="Alamat email" autocomplete="email" aria-label="Alamat email newsletter">
+          <button type="submit" class="press shrink-0 bg-teal-100 hover:bg-teal-200 text-teal-700 text-[11px] font-bold px-4 rounded-full">Berlangganan</button>
+        </div>
+      </form>
+
+      <div class="pt-3 border-t border-gray-200 text-center text-[10px] text-slate-400">
+        Goers © 2021-2026. All Rights Reserved.
+        <div>Version 4.23.19</div>
+      </div>
+    </footer>
+
+  </main>
+
+  <div id="bottomBar" class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 z-50">
+    <div class="max-w-md mx-auto px-4 pt-2.5 flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <p class="text-[11px] text-gray-500 font-medium">Total bayar</p>
+        <p id="barTotal" class="text-base font-extrabold text-gray-900 leading-tight">IDR 500.000</p>
+      </div>
+      <button type="button" id="payBtn" disabled aria-disabled="true"
+        class="press btn-disabled bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold px-6 py-2.5 rounded-full shadow-lg shadow-rose-500/25 flex items-center shrink-0">
+        <span class="buy-label flex items-center">Konfirmasi Pembayaran <i data-lucide="check" class="w-4 h-4 ml-1"></i></span>
+        <span class="buy-spin"><span class="spinner"></span></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="navOverlay" role="status" aria-live="assertive">
+    <div class="ring" aria-hidden="true"></div>
+    <p class="text-xs font-bold text-emerald-600">Memproses pembayaran…</p>
+    <p class="text-[10px] text-emerald-500">Mohon jangan tutup halaman ini</p>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+    const $ = (s, c = document) => c.querySelector(s);
+    const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+    const store = {
+      get(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+      set(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} },
+      del(k) { try { window.localStorage.removeItem(k); } catch (e) {} }
+    };
+    const idr = new Intl.NumberFormat('id-ID');
+    const fmtIDR = (n) => 'IDR ' + idr.format(n);
+    const PRICE = 500000;
+
+    const toastWrap = $('#toastWrap');
+    function showToast(msg) {
+      while (toastWrap.children.length >= 3) toastWrap.firstElementChild.remove();
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.setAttribute('role', 'status');
+      t.textContent = msg;
+      toastWrap.appendChild(t);
+      requestAnimationFrame(() => t.classList.add('show'));
+      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 350); }, 2600);
+    }
+
+    const FALLBACK = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">' +
+      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="#fff1f2"/><stop offset=".55" stop-color="#ffe4e6"/><stop offset="1" stop-color="#fecdd3"/>' +
+      '</linearGradient></defs>' +
+      '<rect width="640" height="420" fill="url(#g)"/>' +
+      '<text x="320" y="210" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="30" font-weight="bold" fill="#f43f5e">Goers</text>' +
+      '<text x="320" y="240" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#fb7185">Gambar tidak tersedia</text>' +
+      '</svg>'
+    );
+    $$('img').forEach((img) => {
+      const shell = () => { const p = img.closest('.shimmer'); if (p) p.classList.add('loaded'); };
+      const fail = () => { if (!img.dataset.fb) { img.dataset.fb = '1'; img.src = FALLBACK; } };
+      if (img.complete) { img.naturalWidth > 0 ? shell() : fail(); }
+      else {
+        img.addEventListener('load', shell, { once: true });
+        img.addEventListener('error', () => { shell(); fail(); }, { once: true });
+      }
+    });
+
+    const revealEls = $$('.reveal');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+      revealEls.forEach((el) => io.observe(el));
+    } else {
+      revealEls.forEach((el) => el.classList.add('in'));
+    }
+
+    $('#langBtn').addEventListener('click', () => showToast('🌐 Bahasa: Indonesia (ID)'));
+    $('#exploreBtn').addEventListener('click', () => showToast('🧭 Membuka Jelajahi…'));
+    $('#userBtn').addEventListener('click', () => showToast('👤 Silakan masuk ke akun Goers-mu'));
+    const searchInput = $('#searchInput');
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && searchInput.value.trim()) showToast('🔍 Mencari "' + searchInput.value.trim() + '"…');
+    });
+    $$('.crumb-demo').forEach((b) => b.addEventListener('click', () => showToast('🚧 Demo — halaman "' + b.textContent.trim() + '"')));
+
+
+    const CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+    const seg = (n) => Array.from({ length: n }, () => CHARS[Math.floor(Math.random() * CHARS.length)]).join('');
+    const genCode = () => 'GRS-' + seg(6) + '-' + seg(3);
+
+    let buyer = null;
+    try { buyer = JSON.parse(store.get('so7_bsi_buyer_v1') || 'null'); } catch (e) { buyer = null; }
+    if (!buyer || !buyer.full_name) { window.location.replace('form.html'); return; }
+
+    const qty = Number.isFinite(buyer.qty) && buyer.qty > 0 ? Math.min(buyer.qty, 5) : 1;
+    const total = Number.isFinite(buyer.total) && buyer.total > 0 ? buyer.total : qty * PRICE;
+    $('#sumQty').textContent = qty + ' tiket';
+    $('#sumTotal').textContent = fmtIDR(total);
+    $('#payTotal').textContent = fmtIDR(total);
+    $('#barTotal').textContent = fmtIDR(total);
+    $('#stepTotal').textContent = fmtIDR(total);
+
+    const qrBox = $('#qrBox'), refCode = $('#refCode'), timerPill = $('#timerPill');
+    const payBtn = $('#payBtn'), overlay = $('#navOverlay');
+    const proofInput = $('#paymentProof');
+    const proofFileName = $('#proofFileName');
+    const proofHelp = $('#proofHelp');
+    const checkPayment = $('#checkPayment');
+    const checkProof = $('#checkProof');
+    let selectedProof = null;
+
+    function updateConfirmButton() {
+      const ready = Boolean(selectedProof && checkPayment.checked && checkProof.checked && !expired && !navigating);
+      payBtn.disabled = !ready;
+      payBtn.setAttribute('aria-disabled', String(!ready));
+      payBtn.classList.toggle('btn-disabled', !ready);
+    }
+
+    proofInput.addEventListener('change', () => {
+      const file = proofInput.files && proofInput.files[0];
+      proofHelp.textContent = '';
+      selectedProof = null;
+      if (!file) {
+        proofFileName.textContent = 'Belum ada file yang dipilih.';
+      } else {
+        const allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+        if (!allowed.includes(file.type)) {
+          proofHelp.textContent = 'Format file tidak didukung. Pilih JPG, PNG, WEBP, atau PDF.';
+          proofInput.value = '';
+          proofFileName.textContent = 'Belum ada file yang dipilih.';
+        } else if (file.size > 5 * 1024 * 1024) {
+          proofHelp.textContent = 'Ukuran file melebihi batas 5 MB.';
+          proofInput.value = '';
+          proofFileName.textContent = 'Belum ada file yang dipilih.';
+        } else {
+          selectedProof = file;
+          proofFileName.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)';
+        }
+      }
+      updateConfirmButton();
+    });
+    checkPayment.addEventListener('change', updateConfirmButton);
+    checkProof.addEventListener('change', updateConfirmButton);
+
+    const PAY_WINDOW = 15 * 60;
+    let secondsLeft = PAY_WINDOW, ticker = null, expired = false, navigating = false;
+
+    function paintQR() {
+      const code = genCode();
+      refCode.textContent = code;
+      return code;
+    }
+
+    function fmtTime(s) {
+      return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+    }
+
+    function renderCountdown() {
+      const cd = $('#countdown');
+      if (cd) cd.textContent = fmtTime(secondsLeft);
+      if (secondsLeft <= 60) {
+        timerPill.classList.remove('text-amber-700', 'bg-amber-50', 'border-amber-200');
+        timerPill.classList.add('text-rose-700', 'bg-rose-50', 'border-rose-200');
+      } else {
+        timerPill.classList.remove('text-rose-700', 'bg-rose-50', 'border-rose-200');
+        timerPill.classList.add('text-amber-700', 'bg-amber-50', 'border-amber-200');
+      }
+    }
+
+    function expire() {
+      expired = true;
+      if (ticker) { clearInterval(ticker); ticker = null; }
+      timerPill.classList.remove('text-amber-700', 'bg-amber-50', 'border-amber-200');
+      timerPill.classList.add('text-rose-700', 'bg-rose-50', 'border-rose-200');
+      timerPill.innerHTML = '<i data-lucide="alert-circle" class="w-3.5 h-3.5"></i><span>QR kedaluwarsa</span>';
+      qrBox.innerHTML = '<div class="text-center space-y-2 px-3">' +
+        '<span class="mx-auto w-12 h-12 rounded-full bg-rose-50 text-rose-500 grid place-items-center"><i data-lucide="alert-circle" class="w-6 h-6"></i></span>' +
+        '<p class="text-[11px] font-bold text-gray-700">Waktu pembayaran habis</p>' +
+        '<button type="button" id="renewBtn" class="press bg-rose-500 text-white text-[10px] font-bold px-4 py-2 rounded-full inline-flex items-center gap-1"><i data-lucide="refresh-cw" class="w-3 h-3"></i>Perbarui QR</button>' +
+        '</div>';
+      updateConfirmButton();
+      if (window.lucide) window.lucide.createIcons();
+      const renewBtn = $('#renewBtn');
+      renewBtn && renewBtn.addEventListener('click', () => {
+        expired = false;
+        secondsLeft = PAY_WINDOW;
+        paintQR();
+        timerPill.classList.remove('text-rose-700', 'bg-rose-50', 'border-rose-200');
+        timerPill.classList.add('text-amber-700', 'bg-amber-50', 'border-amber-200');
+        timerPill.innerHTML = '<i data-lucide="timer" class="w-3.5 h-3.5"></i><span>Bayar dalam</span><span id="countdown" class="font-mono">15:00</span>';
+        updateConfirmButton();
+        if (window.lucide) window.lucide.createIcons();
+        renderCountdown();
+        startTicker();
+        showToast('🔄 QR diperbarui — segera selesaikan pembayaran');
+      });
+    }
+
+    function startTicker() {
+      if (ticker) clearInterval(ticker);
+      ticker = setInterval(() => {
+        secondsLeft--;
+        renderCountdown();
+        if (secondsLeft <= 0) expire();
+      }, 1000);
+    }
+
+    const firstCode = paintQR();
+    renderCountdown();
+    startTicker();
+
+    const copyBtn = $('#copyRef');
+    copyBtn.addEventListener('click', () => {
+      const code = refCode.textContent || '';
+      if (!code || code.indexOf('…') !== -1) { showToast('⚠️ Kode referensi belum tersedia'); return; }
+      const done = () => showToast('📋 Kode referensi disalin: ' + code);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(done).catch(() => showToast('⚠️ Gagal menyalin kode'));
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = code;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { showToast('⚠️ Gagal menyalin kode'); }
+        ta.remove();
+      }
+    });
+
+    payBtn.addEventListener('click', () => {
+      if (navigating || expired || !selectedProof || !checkPayment.checked || !checkProof.checked) {
+        updateConfirmButton();
+        showToast('Lengkapi bukti pembayaran dan kedua kotak centang terlebih dahulu.');
+        return;
+      }
+      navigating = true;
+      updateConfirmButton();
+      payBtn.classList.add('is-loading');
+      if (ticker) { clearInterval(ticker); ticker = null; }
+      const order = {
+        code: refCode.textContent || firstCode,
+        method: 'QRIS',
+        ticket: 'Concert Pass - Sheila On 7',
+        qty: qty,
+        total: total,
+        status: 'pending_manual_verification',
+        proofFileName: selectedProof.name,
+        proofFileSize: selectedProof.size,
+        acknowledgedPayment: checkPayment.checked,
+        acknowledgedProof: checkProof.checked,
+        submittedAt: new Date().toISOString()
+      };
+      store.set('so7_bsi_order_v1', JSON.stringify(order));
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => { window.location.assign('pending.html'); }, 1100);
+    });
+
+    window.addEventListener('pageshow', () => {
+      navigating = false;
+      payBtn.classList.remove('is-loading');
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+      updateConfirmButton();
+      if (!expired && !ticker) startTicker();
+    });
+
+    $$('.social-btn').forEach((b) => b.addEventListener('click', () => showToast('Segera hadir di ' + b.dataset.name + ' 🚀')));
+    $$('.foot-link').forEach((b) => b.addEventListener('click', () => showToast('🚧 Demo — halaman "' + b.textContent.trim() + '"')));
+    const subsForm = $('#subsForm'), subsEmail = $('#subsEmail');
+    subsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const v = subsEmail.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { showToast('⚠️ Format email tidak valid'); subsEmail.focus(); return; }
+      showToast('✅ ' + v + ' berhasil berlangganan');
+      subsEmail.value = '';
+    });
+
+    const initIcons = () => { if (window.lucide) window.lucide.createIcons(); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initIcons, { once: true });
+    else initIcons();
+  })();
+  </script>
+</body>
+</html>
