@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10162f">
+  <title>Memverifikasi Pembayaran | Event</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1024;--panel:#141b36;--pink:#fb7185;--gold:#f5c76a;--muted:#aab4d3;--line:rgba(255,255,255,.12)}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:#fff}
+    body{min-height:100svh;overflow:hidden;background:radial-gradient(ellipse at 50% 15%,#26305c 0%,#111832 38%,#090d1d 78%);display:grid;place-items:center;padding:24px}
+    .glow{position:fixed;width:min(78vw,560px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(251,113,133,.13),transparent 68%);filter:blur(12px);animation:breathe 5s ease-in-out infinite;pointer-events:none}
+    .card{position:relative;width:min(100%,520px);text-align:center;padding:clamp(24px,6vw,44px);border:1px solid var(--line);border-radius:28px;background:linear-gradient(145deg,rgba(25,33,66,.88),rgba(12,17,37,.9));box-shadow:0 28px 90px rgba(0,0,0,.35);backdrop-filter:blur(16px)}
+    .eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:800}
+    .orbit{width:118px;height:118px;margin:28px auto;position:relative;display:grid;place-items:center}
+    .orbit:before,.orbit:after{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid rgba(245,199,106,.24)}
+    .orbit:before{border-top-color:var(--gold);border-right-color:var(--pink);animation:spin 2.4s linear infinite}
+    .orbit:after{inset:10px;border-bottom-color:var(--pink);border-left-color:rgba(245,199,106,.7);animation:spin 3.4s linear infinite reverse}
+    .disc{width:70px;height:70px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#f5c76a,#fb7185);color:#171a32;box-shadow:0 0 38px rgba(251,113,133,.2)}
+    .disc svg{width:32px;height:32px}
+    h1{font-size:clamp(23px,5vw,31px);line-height:1.15;margin:0 0 12px;letter-spacing:-.035em}
+    .message{min-height:54px;display:grid;place-items:center;color:#e5e9f8;font-size:15px;line-height:1.55;transition:opacity .3s ease;}
+    .message.fade{opacity:.2}
+    .dots{display:flex;gap:7px;justify-content:center;margin:20px 0 22px}
+    .dots span{width:6px;height:6px;border-radius:50%;background:var(--pink);animation:dot 1.2s ease-in-out infinite}.dots span:nth-child(2){animation-delay:.16s;background:var(--gold)}.dots span:nth-child(3){animation-delay:.32s}
+    .progress{height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:22px}.bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--pink),var(--gold));transition:width 1s linear}
+    .meta{display:flex;justify-content:space-between;gap:12px;margin-top:10px;color:var(--muted);font-size:11px}
+    .notice{margin:22px 0 0;padding-top:16px;border-top:1px solid var(--line);font-size:11px;line-height:1.6;color:#9faaca}
+    @keyframes spin{to{transform:rotate(360deg)}}@keyframes dot{0%,80%,100%{transform:translateY(0);opacity:.45}40%{transform:translateY(-6px);opacity:1}}@keyframes breathe{0%,100%{transform:scale(.92);opacity:.65}50%{transform:scale(1.08);opacity:1}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:8s!important;transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+  <main class="card" aria-live="polite">
+    <div class="eyebrow">EVENT TICKET · PAYMENT STATUS</div>
+    <div class="orbit" aria-hidden="true"><div class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="6"/><path d="M9.5 12.2 11 13.7l3.7-3.9"/></svg></div></div>
+    <h1>Memeriksa Status Pembayaran</h1>
+    <div id="message" class="message">Kami sedang menyiapkan informasi status pesanan Anda.</div>
+    <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="progress" role="progressbar" aria-label="Waktu pemeriksaan" aria-valuemin="0" aria-valuemax="300" aria-valuenow="0"><div id="bar" class="bar"></div></div>
+    <div class="meta"><span id="stage">Pemeriksaan status</span><span id="timer">05:00</span></div>
+    <p class="notice">Halaman ini tidak mengonfirmasi pembayaran secara otomatis. Status berhasil hanya ditampilkan setelah pembayaran diverifikasi oleh sistem pembayaran resmi. Jangan tutup halaman jika Anda masih menunggu pembaruan status.</p>
+  </main>
+  <script>
+    (()=>{
+      'use strict';
+      const DURATION=300;
+      const messages=[
+        'Menyiapkan detail pesanan dan informasi tiket Anda.',
+        'Memeriksa data transaksi yang tersimpan.',
+        'Mencocokkan referensi pesanan dengan status pembayaran.',
+        'Menunggu pembaruan status dari proses verifikasi.',
+        'Memastikan informasi pesanan tetap konsisten.',
+        'Menyiapkan hasil pemeriksaan untuk ditampilkan.',
+        'Terima kasih telah menunggu. Pemeriksaan masih berlangsung.'
+      ];
+      const message=document.getElementById('message');
+      const timer=document.getElementById('timer');
+      const bar=document.getElementById('bar');
+      const stage=document.getElementById('stage');
+      const progress=document.querySelector('[role="progressbar"]');
+      let elapsed=0, messageIndex=-1;
+      function getOrder(){try{return JSON.parse(localStorage.getItem('so7_bsi_order_v1')||'null')}catch(_){return null}}
+      function isVerified(){const order=getOrder();return !!order && (order.status==='verified'||order.status==='payment_verified'||order.payment_status==='verified')}
+      function renderMessage(){let next;do{next=Math.floor(Math.random()*messages.length)}while(messages.length>1&&next===messageIndex);messageIndex=next;message.classList.add('fade');setTimeout(()=>{message.textContent=messages[next];message.classList.remove('fade')},180)}
+      function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+      renderMessage();
+      const textTimer=setInterval(()=>{if(elapsed<DURATION){elapsed++;timer.textContent=fmt(DURATION-elapsed);bar.style.width=(elapsed/DURATION*100)+'%';progress.setAttribute('aria-valuenow',String(elapsed));if(elapsed%7===0)renderMessage();if(elapsed%30===0)stage.textContent='Pemeriksaan status · '+Math.round(elapsed/DURATION*100)+'%';}
+        if(isVerified()){clearInterval(textTimer);stage.textContent='Pembayaran terverifikasi';message.textContent='Pembayaran telah diverifikasi. Membuka halaman tiket…';window.location.replace('success.html');return;}
+        if(elapsed>=DURATION){clearInterval(textTimer);if(isVerified()){window.location.replace('success.html')}else{stage.textContent='Menunggu verifikasi';message.textContent='Status pembayaran belum terverifikasi. Anda akan diarahkan ke halaman status pesanan.';setTimeout(()=>window.location.replace('pending.html'),1200)}}
+      },1000);
+      window.addEventListener('storage',e=>{if(e.key==='so7_bsi_order_v1'&&isVerified())window.location.replace('success.html')});
+    })();
+  </script>
+</body>
+</html>
